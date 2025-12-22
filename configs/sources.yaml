@@ -1,0 +1,8 @@
+news_api:
+  api_key: ""  # put key here or use environment variable
+  query: "world"
+  limit: 7
+
+rss_feeds:
+  - "http://feeds.bbci.co.uk/news/rss.xml"
+  - "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
