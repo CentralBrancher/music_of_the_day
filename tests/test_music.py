@@ -17,7 +17,9 @@ from music_of_the_day.mapping.semantics_to_music import MusicParameters
             density=0.5,
             dissonance=0.2,
             register="low",
-            motif_variation=0.3
+            motif_variation=0.3,
+            energy=0.1,
+            arc="fall"
         ), True),
 
         # Mid register compatible with A minor
@@ -28,7 +30,9 @@ from music_of_the_day.mapping.semantics_to_music import MusicParameters
             density=0.8,
             dissonance=0.5,
             register="mid",
-            motif_variation=0.6
+            motif_variation=0.6,
+            energy=0.7,
+            arc="wave"
         ), False),
 
         # High register compatible with C major
@@ -39,7 +43,9 @@ from music_of_the_day.mapping.semantics_to_music import MusicParameters
             density=0.3,
             dissonance=0.1,
             register="high",
-            motif_variation=0.1
+            motif_variation=0.1,
+            energy=0.9,
+            arc="rise"
         ), False),
     ]
 )

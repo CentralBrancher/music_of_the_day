@@ -108,6 +108,7 @@ def generate_piano_midi(
 
     scale = [n for n in scale if reg_min <= n <= reg_max]
     if not scale:
+        print(f"⚠️ Warning: Register '{params.register}' incompatible with {params.key} {params.mode} scale")
         scale = SCALES[(params.key, params.mode)]
 
     seconds_per_beat = 60.0 / params.tempo
