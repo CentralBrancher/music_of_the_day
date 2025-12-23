@@ -1,5 +1,6 @@
 from music_of_the_day.semantics.features import SemanticFeatures
 from music_of_the_day.mapping.music_intent import MusicIntent
+import numpy as np
 
 
 def generate_explanation(
@@ -13,65 +14,73 @@ def generate_explanation(
 
     lines: list[str] = []
 
-    # --- Tonal center ---
+    # --- Harmonic color / tonal atmosphere ---
     lines.append(
-        f"The piece centers around {music.key} {music.mode}, "
-        f"establishing a tonal atmosphere aligned with the day's emotional balance."
+        f"The piece adopts a {music.harmonic_color} harmonic palette, "
+        f"setting an emotional atmosphere aligned with the day's semantic tone."
     )
 
-    # --- Tempo & energy ---
+    # --- Tempo & overall energy ---
+    mean_intensity = float(np.mean(music.intensity_curve))
     lines.append(
-        f"A tempo of {music.tempo} BPM reflects the momentum of current events, "
-        f"with an overall energy level of {music.energy:.2f} shaping intensity."
+        f"A base tempo of {music.tempo_base} BPM underpins the composition, "
+        f"with an average intensity of {mean_intensity:.2f} shaping its momentum."
     )
 
-    # --- Narrative arc ---
-    if music.arc == "rise":
+    # --- Motion / narrative arc ---
+    if music.motion_profile == "rise":
         lines.append(
-            "The composition unfolds as a gradual ascent, mirroring a build-up of tension or anticipation."
+            "The music follows a rising trajectory, gradually building energy and expectation."
         )
-    elif music.arc == "wave":
+    elif music.motion_profile == "wave":
         lines.append(
-            "The music follows a wave-like arc, alternating between tension and release as dominant themes collide."
+            "A wave-like motion alternates between tension and release, reflecting competing forces."
         )
-    elif music.arc == "fall":
+    elif music.motion_profile == "collapse":
         lines.append(
-            "A downward arc suggests resolution or reflection following earlier intensity."
+            "A collapsing motion suggests fragmentation and loss of structural stability."
+        )
+    elif music.motion_profile == "drift":
+        lines.append(
+            "A drifting motion creates a sense of suspension and unresolved direction."
         )
 
     # --- Novelty & variation ---
     if features.semantic_novelty > 0.7:
         lines.append(
-            "High semantic novelty drives frequent motif transformations, "
-            "introducing surprise and instability."
+            "High semantic novelty drives frequent musical variation, "
+            "producing surprise and instability."
         )
     elif features.semantic_novelty < 0.3:
         lines.append(
-            "Low semantic novelty allows motifs to linger, reinforcing continuity and familiarity."
+            "Low semantic novelty allows musical ideas to persist, "
+            "reinforcing continuity and familiarity."
         )
 
     # --- Texture & density ---
+    mean_density = float(np.mean(music.density_curve))
     if features.topic_entropy > 0.6:
         lines.append(
-            "Dense musical textures reflect a fragmented and information-heavy news landscape."
+            f"Dense textures (avg. density {mean_density:.2f}) mirror a fragmented, information-heavy landscape."
         )
     elif features.topic_entropy < 0.4:
         lines.append(
-            "A more transparent texture mirrors a focused and coherent narrative space."
+            f"A more transparent texture (avg. density {mean_density:.2f}) reflects narrative focus and clarity."
         )
 
-    # --- Harmonic tension ---
+    # --- Harmonic / emotional tension ---
+    mean_tension = float(np.mean(music.tension_curve))
     if features.intra_day_dispersion > 0.5:
         lines.append(
-            "Moments of harmonic tension and dissonance convey conflicting perspectives and uncertainty."
+            f"Elevated harmonic tension (avg. {mean_tension:.2f}) conveys conflicting perspectives and uncertainty."
         )
 
     # --- Emotional layer ---
-    emotion = features.emotion
+    valence, arousal, tension = music.emotional_vector
     lines.append(
-        f"Emotionally, the piece leans toward a "
-        f"{'brighter' if emotion.valence > 0 else 'darker'} tone, "
-        f"with arousal at {emotion.arousal:.2f} and tension at {emotion.tension:.2f}."
+        f"Emotionally, the piece leans "
+        f"{'brighter' if valence > 0 else 'darker'}, "
+        f"with arousal at {arousal:.2f} and emotional tension at {tension:.2f}."
     )
 
     # --- Narrative label ---
