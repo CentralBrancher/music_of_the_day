@@ -1,6 +1,6 @@
 # 🎶 Music of the Day
 
-**Music of the Day** is an end-to-end generative system that transforms the *semantic state of daily news* into an expressive solo piano composition.
+**Music of the Day** is an end-to-end generative system that transforms the *semantic state of daily news* into an expressive ensemble composition.
 
 Each day, the project ingests real-world events, analyzes their meaning and dynamics, and produces a unique piece of music that reflects how the world feels *today* — while remembering how it felt *yesterday*.
 
@@ -16,7 +16,7 @@ On every run, the system:
 2. 🧠 Embeds and analyzes semantic meaning  
 3. 📈 Tracks change, novelty, and narrative momentum over time  
 4. 🎼 Maps semantic features to musical intent  
-5. 🎹 Composes expressive solo piano music (MIDI)  
+5. 🎹 Composes expressive music (MIDI)  
 6. 🔊 Renders high-quality audio (WAV)  
 7. 📝 Writes a natural-language explanation of the result  
 
@@ -40,9 +40,6 @@ music-of-the-day/
 │ └── soundfonts/ # SoundFont for WAV rendering
 ├── configs/
 │ ├── sources.yaml # RSS feeds & ingestion config
-│ ├── semantic.yaml # Semantic parameters
-│ └── music.yaml # Musical defaults
-├── notebooks/ # Exploration & research notebooks
 ├── outputs/
 │ └── YYYY-MM-DD/
 │ ├── music.mid
@@ -50,7 +47,6 @@ music-of-the-day/
 │ └── explanation.txt
 ├── scripts/
 │ ├── run_daily.py # One-command daily runner
-│ └── backfill.py # Historical regeneration
 ├── src/music_of_the_day/
 │ ├── ingestion/ # News fetching & normalization
 │ ├── semantics/ # Embeddings, features, memory
@@ -104,39 +100,48 @@ The system extracts interpretable features such as:
 
 ## 🎼 Semantics → Music Mapping
 
-Semantic features are translated into **musical intent**, including:
+Semantic features are translated into **musical intent**, expressed as high-level forces that guide composition rather than fixed musical facts:
 
-- Key and mode (major / minor)
-- Tempo
-- Texture density
-- Harmonic dissonance
-- Register focus
-- Motif variation
-- **Energy** (overall intensity)
-- **Narrative arc** (`rise`, `wave`, `fall`)
+- **Harmonic color** (bright / dark / ambiguous)
+- **Base tempo** (global pacing anchor)
+- **Dynamic intensity curve** (energy over time)
+- **Tension curve** (harmonic and emotional pressure)
+- **Texture density curve** (orchestration thickness)
+- **Emotional vector** *(valence, arousal, tension)*
+- **Motion profile** (`drift`, `rise`, `wave`, `collapse`)
+- **Duration** (overall temporal scale)
 
-This layer acts as the creative bridge between meaning and sound.
+Instead of prescribing notes or keys directly, this layer shapes how the music *behaves* over time—serving as the creative bridge between semantic meaning and audible form.
 
 ---
 
 ## 🎹 Music Generation
 
 ### Composition
-- Generates expressive solo piano MIDI using `pretty_midi`
-- Two-hand writing:
-  - Right hand: evolving melodic motifs
-  - Left hand: weighted harmonic support
-- Musical techniques include:
-  - Dynamic register expansion
-  - Phrase-shaped velocity curves
-  - Motif inversion and stretching
-  - Energy-driven harmonic tension
-  - Narrative-aware development
 
-### Rendering
-- MIDI rendered to WAV using FluidSynth
-- High-quality SoundFont (`FluidR3_GM.sf2`)
-- Produces ready-to-listen audio
+Music is generated from `MusicIntent` using **instrument-specific renderers** built on `pretty_midi`.  
+Rather than a single solo instrument, the system produces a small **ensemble texture** driven by shared semantic curves.
+
+- Intent-driven MIDI generation using `pretty_midi`
+- Multi-instrument ensemble:
+  - Piano
+  - Strings
+  - Bass
+  - Percussion
+- Time-discretized rendering over semantic frames
+- Probabilistic note triggering based on texture density
+- Expressive control derived from intent curves:
+  - **Intensity curve** → velocity and energy
+  - **Density curve** → note activation probability
+  - **Tension curve** → harmonic and registral pressure
+  - **Motion profile** → long-range musical behavior
+
+Musical techniques include:
+- Curve-shaped dynamics over time
+- Density-weighted texture emergence
+- Energy-driven harmonic tension
+- Narrative-aware motion (`drift`, `rise`, `wave`, `collapse`)
+- Stochastic variation for organic output
 
 ---
 
@@ -187,20 +192,6 @@ The project is designed to support:
 
 ---
 
-## 🌱 Optional Enhancements
-
-- Sustain pedal and rubato
-
-- Multi-instrument orchestration
-
-- Web frontend or daily feed
-
-- Public API
-
-- Long-horizon semantic memory
-
---- 
-
 ## 🎨 Philosophy
 
 ### Music of the Day is not about turning news headlines into literal sounds.
@@ -218,3 +209,4 @@ This system listens — and plays.
 
 MIT License.
 Use freely, remix boldly, credit kindly.
+
