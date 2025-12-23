@@ -5,8 +5,7 @@ from music_of_the_day.semantics.features import (
     aggregate_daily_embedding,
     extract_semantic_features
 )
-from music_of_the_day.mapping.semantics_to_music import map_semantics_to_music
-
+from music_of_the_day.mapping.semantics_to_intent import build_intent
 
 def run_pipeline(
     articles: list[str],
@@ -37,6 +36,6 @@ def run_pipeline(
     )
 
     # --- Step 4: Map semantics → music ---
-    music_params = map_semantics_to_music(features)
+    intent = build_intent(features)
 
-    return features, music_params, daily_embedding
+    return features, intent, daily_embedding

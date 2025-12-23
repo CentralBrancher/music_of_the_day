@@ -5,7 +5,7 @@ import os
 from music_of_the_day.ingestion.fetch_news import fetch_news
 from music_of_the_day.ingestion.normalize import normalize_text
 from music_of_the_day.pipeline import run_pipeline
-from music_of_the_day.music.midi_generator import generate_piano_midi
+from music_of_the_day.music.ensemble import render_ensemble
 from music_of_the_day.music.render import render_midi_to_wav
 from music_of_the_day.explain.explanation import generate_explanation
 from music_of_the_day.semantics.storage.rolling import (
@@ -42,7 +42,7 @@ def main():
     emotion_yesterday = load_latest_emotion()
 
     # --- Step 4: Run pipeline (compute embeddings today internally) ---
-    features, music_params, daily_embedding = run_pipeline(
+    features, intent, daily_embedding = run_pipeline(
         articles=normalized_articles,
         rolling_embeddings=rolling_embeddings,
         embedding_yesterday=embedding_yesterday,
@@ -62,9 +62,8 @@ def main():
     wav_path = out_dir / "music.wav"
 
     # --- Step 7: Generate MIDI ---
-    generate_piano_midi(
-        music_params,
-        duration_seconds=75,
+    render_ensemble(
+        intent=intent,
         output_path=str(midi_path)
     )
 
@@ -76,7 +75,7 @@ def main():
     )
 
     # --- Step 9: Generate explanation ---
-    explanation = generate_explanation(features, music_params)
+    explanation = generate_explanation(features, intent)
     (out_dir / "explanation.txt").write_text(explanation)
 
     print(f"🎶 Music of the Day generated for {today}:")

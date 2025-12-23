@@ -1,88 +1,116 @@
 import os
+import numpy as np
 import pretty_midi
 import pytest
 
-from music_of_the_day.music.midi_generator import generate_piano_midi
-from music_of_the_day.mapping.semantics_to_music import MusicParameters
+from music_of_the_day.mapping.music_intent import MusicIntent
+from music_of_the_day.music.ensemble import render_ensemble
+
+
+def make_intent(
+    duration_seconds: int = 10,
+    tempo_base: int = 72,
+    motion_profile: str = "wave",
+    harmonic_color: str = "ambiguous",
+):
+    """
+    Helper to construct a minimal but valid MusicIntent.
+    """
+    T = duration_seconds
+
+    return MusicIntent(
+        duration_seconds=duration_seconds,
+        intensity_curve=np.linspace(0.2, 0.8, T),
+        tension_curve=np.linspace(0.1, 0.6, T),
+        density_curve=np.clip(np.random.rand(T), 0.2, 0.9),
+        tempo_base=tempo_base,
+        harmonic_color=harmonic_color,
+        motion_profile=motion_profile,
+        emotional_vector=np.array([0.1, 0.6, 0.4])
+    )
+
+
+def test_render_ensemble_creates_valid_midi(tmp_path):
+    """
+    Full integration test:
+    - Ensemble rendering
+    - Multiple instruments
+    - Notes are written
+    """
+    output_path = tmp_path / "ensemble.mid"
+    intent = make_intent(duration_seconds=8)
+
+    render_ensemble(intent, str(output_path))
+
+    # File exists and is non-empty
+    assert output_path.exists()
+    assert output_path.stat().st_size > 0
+
+    midi = pretty_midi.PrettyMIDI(str(output_path))
+
+    # Expect multiple instruments (piano, strings, bass, percussion)
+    assert len(midi.instruments) >= 3
+
+    # At least one note must exist overall
+    total_notes = sum(len(inst.notes) for inst in midi.instruments)
+    assert total_notes > 0
+
+
+def test_music_intent_curves_are_consistent():
+    """
+    Validate MusicIntent structural integrity.
+    """
+    duration = 12
+    intent = make_intent(duration_seconds=duration)
+
+    assert intent.intensity_curve.shape == (duration,)
+    assert intent.tension_curve.shape == (duration,)
+    assert intent.density_curve.shape == (duration,)
+
+    for curve in [
+        intent.intensity_curve,
+        intent.tension_curve,
+        intent.density_curve,
+    ]:
+        assert np.all(curve >= 0.0)
+        assert np.all(curve <= 1.0)
 
 
 @pytest.mark.parametrize(
-    "params,expect_warning",
-    [
-        # Low register incompatible with C major scale
-        (MusicParameters(
-            key="C",
-            mode="major",
-            tempo=60,
-            density=0.5,
-            dissonance=0.2,
-            register="low",
-            motif_variation=0.3,
-            energy=0.1,
-            arc="fall"
-        ), True),
-
-        # Mid register compatible with A minor
-        (MusicParameters(
-            key="A",
-            mode="minor",
-            tempo=90,
-            density=0.8,
-            dissonance=0.5,
-            register="mid",
-            motif_variation=0.6,
-            energy=0.7,
-            arc="wave"
-        ), False),
-
-        # High register compatible with C major
-        (MusicParameters(
-            key="C",
-            mode="major",
-            tempo=75,
-            density=0.3,
-            dissonance=0.1,
-            register="high",
-            motif_variation=0.1,
-            energy=0.9,
-            arc="rise"
-        ), False),
-    ]
+    "motion_profile",
+    ["drift", "rise", "wave", "collapse"]
 )
-def test_generate_piano_midi(tmp_path, params, expect_warning, capsys):
+def test_motion_profiles_do_not_crash(tmp_path, motion_profile):
     """
-    Test full MIDI generation including:
-    - melody + left-hand chords
-    - register filtering
-    - warning printed if register incompatible
+    Renderer smoke test across narrative motion profiles.
     """
-    output_path = tmp_path / "test.mid"
-
-    result_path = generate_piano_midi(
-        params,
-        duration_seconds=10,
-        output_path=str(output_path)
+    output_path = tmp_path / f"{motion_profile}.mid"
+    intent = make_intent(
+        duration_seconds=6,
+        motion_profile=motion_profile
     )
 
-    # File exists
-    assert os.path.exists(result_path)
+    render_ensemble(intent, str(output_path))
 
-    # File is non-empty
-    assert os.path.getsize(result_path) > 0
+    midi = pretty_midi.PrettyMIDI(str(output_path))
+    assert len(midi.instruments) > 0
 
-    # Load MIDI and check instruments
-    midi = pretty_midi.PrettyMIDI(result_path)
-    assert len(midi.instruments) == 1
-    notes = midi.instruments[0].notes
-    assert len(notes) > 0
 
-    # Optional: Check note pitches within safe MIDI range
-    for note in notes:
-        assert 24 <= note.pitch <= 84
+@pytest.mark.parametrize(
+    "harmonic_color",
+    ["bright", "dark", "ambiguous"]
+)
+def test_harmonic_colors_render(tmp_path, harmonic_color):
+    """
+    Ensure harmonic color changes don't break rendering.
+    """
+    output_path = tmp_path / f"{harmonic_color}.mid"
+    intent = make_intent(
+        duration_seconds=6,
+        harmonic_color=harmonic_color
+    )
 
-    # Capture stdout for warning
-    captured = capsys.readouterr()
-    if expect_warning:
-        assert "⚠️ Warning: Register" in captured.out
-    else:
-        assert "⚠️ Warning: Register" not in captured.out
+    render_ensemble(intent, str(output_path))
+
+    midi = pretty_midi.PrettyMIDI(str(output_path))
+    assert sum(len(i.notes) for i in midi.instruments) > 0
