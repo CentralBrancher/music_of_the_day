@@ -33,7 +33,7 @@ def main():
     # --- Step 1: Fetch news ---
     articles = fetch_news(limit=7)
     if not articles:
-        print("⚠️ No articles fetched. Exiting.")
+        print("No articles fetched. Exiting.")
         return
 
     # --- Step 2: Normalize text ---
@@ -82,7 +82,7 @@ def main():
     explanation = generate_explanation(features, intent)
     (out_dir / "explanation.txt").write_text(explanation)
 
-    print(f"🎶 Music of the Day generated for {today}:")
+    print(f"- Music of the Day generated for {today}:")
     print(f"- MIDI: {midi_path}")
     print(f"- WAV: {wav_path}")
     print(f"- Explanation: {out_dir / 'explanation.txt'}")
