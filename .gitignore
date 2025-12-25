@@ -28,7 +28,6 @@ ENV/
 # =========================
 data/processed/
 data/interim/
-assets/
 *.npy
 *.npz
 *.pkl
