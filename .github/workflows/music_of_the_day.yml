@@ -2,7 +2,7 @@ name: Music of the day
 
 on:
   schedule:
-    - cron: "0 12 * * *"  # run daily at UTC noon
+    - cron: "0 12 * * *"  # daily at UTC noon
   workflow_dispatch:
 
 jobs:
@@ -10,12 +10,26 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
+      # -----------------------------
+      # Checkout repo
+      # -----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # -----------------------------
+      # Pull Git LFS files (CRITICAL)
+      # -----------------------------
+      - name: Pull Git LFS files
+        run: |
+          git lfs install
+          git lfs pull
+
+      # -----------------------------
+      # Setup Python
+      # -----------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -23,7 +37,7 @@ jobs:
           cache: "pip"
 
       # -----------------------------
-      # Linux: install FluidSynth
+      # Install FluidSynth (Linux)
       # -----------------------------
       - name: Install FluidSynth (Ubuntu)
         if: runner.os == 'Linux'
@@ -32,21 +46,24 @@ jobs:
           sudo apt-get install -y fluidsynth
 
       # -----------------------------
-      # Windows: install FluidSynth
+      # Install FluidSynth (Windows)
       # -----------------------------
       - name: Install FluidSynth (Windows)
         if: runner.os == 'Windows'
         run: |
           choco install fluidsynth -y
-      
+
+      # -----------------------------
+      # Fix DLL path (Windows)
+      # -----------------------------
       - name: Fix FluidSynth DLL path (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           echo "C:\ProgramData\chocolatey\lib\fluidsynth\tools\bin" >> $env:GITHUB_PATH
-          
+
       # -----------------------------
-      # Python dependencies
+      # Install Python dependencies
       # -----------------------------
       - name: Install dependencies
         run: |
@@ -55,7 +72,14 @@ jobs:
           pip install -r requirements.txt
 
       # -----------------------------
-      # Run job
+      # Optional sanity check
+      # -----------------------------
+      - name: Verify SoundFont exists
+        run: |
+          ls -lh assets/soundfonts || dir assets\soundfonts
+
+      # -----------------------------
+      # Run Daily Music
       # -----------------------------
       - name: Run Daily Music
         env:
@@ -64,7 +88,7 @@ jobs:
           python scripts/run_daily.py
 
       # -----------------------------
-      # Upload artifacts
+      # Upload outputs
       # -----------------------------
       - name: Upload outputs
         uses: actions/upload-artifact@v4
