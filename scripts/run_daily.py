@@ -1,6 +1,7 @@
+import os
+import sys
 from datetime import date
 from pathlib import Path
-import os
 
 from music_of_the_day.ingestion.fetch_news import fetch_news
 from music_of_the_day.ingestion.normalize import normalize_text
@@ -24,6 +25,9 @@ from music_of_the_day.semantics.storage.emotion import (
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+    
     today = date.today().isoformat()
 
     # --- Step 1: Fetch news ---
