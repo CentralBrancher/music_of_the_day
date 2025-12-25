@@ -38,7 +38,13 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           choco install fluidsynth -y
-
+      
+      - name: Fix FluidSynth DLL path (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "C:\ProgramData\chocolatey\lib\fluidsynth\tools\bin" >> $env:GITHUB_PATH
+          
       # -----------------------------
       # Python dependencies
       # -----------------------------
