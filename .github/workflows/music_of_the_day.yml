@@ -87,10 +87,6 @@ jobs:
         run: |
           Get-ChildItem assets\soundfonts | Format-Table Name,Length
 
-      - name: Verify SoundFont exists
-        run: |
-          ls -lh assets/soundfonts || dir assets\soundfonts
-
       # -----------------------------
       # Run Daily Music
       # -----------------------------
