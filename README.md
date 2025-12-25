@@ -1,30 +1,30 @@
-# 🎶 Music of the Day
+# Music of the Day
 
 **Music of the Day** is an end-to-end generative system that transforms the *semantic state of daily news* into an expressive ensemble composition.
 
-Each day, the project ingests real-world events, analyzes their meaning and dynamics, and produces a unique piece of music that reflects how the world feels *today* — while remembering how it felt *yesterday*.
+Each day, the project ingests real-world events, analyzes their meaning and dynamics, and produces a unique piece of music that reflects how the world feels *today* while remembering how it felt *yesterday*.
 
 > *A living musical diary of global semantics.*
 
 ---
 
-## ✨ What It Does
+## What It Does
 
 On every run, the system:
 
-1. 📰 Fetches daily news from configurable RSS sources  
-2. 🧠 Embeds and analyzes semantic meaning  
-3. 📈 Tracks change, novelty, and narrative momentum over time  
-4. 🎼 Maps semantic features to musical intent  
-5. 🎹 Composes expressive music (MIDI)  
-6. 🔊 Renders high-quality audio (WAV)  
-7. 📝 Writes a natural-language explanation of the result  
+1. Fetches daily news from configurable RSS sources  
+2. Embeds and analyzes semantic meaning  
+3. Tracks change, novelty, and narrative momentum over time  
+4. Maps semantic features to musical intent  
+5. Composes expressive music (MIDI)  
+6. Renders high-quality audio (WAV)  
+7. Writes a natural-language explanation of the result  
 
 All in **one command**.
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 ```bash
 News → Embeddings → Semantic Features → Musical Intent → MIDI → WAV
                   ↑
@@ -33,7 +33,7 @@ News → Embeddings → Semantic Features → Musical Intent → MIDI → WAV
 
 ---
 
-## 🗂️ Repository Structure
+## Repository Structure
 ```bash
 music-of-the-day/
 ├── assets/
@@ -62,7 +62,7 @@ music-of-the-day/
 
 ---
 
-## 🧠 Semantic Layer
+## Semantic Layer
 
 ### News Ingestion
 - Pulls articles via RSS feeds (configured in `configs/sources.yaml`)
@@ -98,7 +98,7 @@ The system extracts interpretable features such as:
 
 ---
 
-## 🎼 Semantics → Music Mapping
+## Semantics → Music Mapping
 
 Semantic features are translated into **musical intent**, expressed as high-level forces that guide composition rather than fixed musical facts:
 
@@ -115,7 +115,7 @@ Instead of prescribing notes or keys directly, this layer shapes how the music *
 
 ---
 
-## 🎹 Music Generation
+## Music Generation
 
 ### Composition
 
@@ -145,7 +145,7 @@ Musical techniques include:
 
 ---
 
-## ▶️ Running the Project
+## Running the Project
 
 ### Setup
 
@@ -162,7 +162,7 @@ Ensure you have FluidSynth installed and accessible from PATH.
 
 ---
 
-## 🧪 Tests
+## Tests
 
 Run the full test suite:
 
@@ -180,7 +180,7 @@ Includes tests for:
 
 ---
 
-## 🔁 Automation
+## Automation
 
 The project is designed to support:
 
@@ -189,24 +189,5 @@ The project is designed to support:
 - Artifact uploads (MIDI, WAV, explanations)
 
 - Long-term semantic and musical continuity
-
----
-
-## 🎨 Philosophy
-
-### Music of the Day is not about turning news headlines into literal sounds.
-
-It’s about capturing the motion of meaning —
-how ideas shift, collide, accelerate, and settle —
-and letting that motion leave a trace in music.
-
-Some days are calm. Some days are tense.
-This system listens — and plays.
-
---- 
-
-## 📜 License
-
-MIT License.
-Use freely, remix boldly, credit kindly.
+  
 
