@@ -45,7 +45,7 @@ checkpoints/
 # =========================
 logs/
 *.log
-# outputs/
+outputs/
 results/
 
 # =========================
