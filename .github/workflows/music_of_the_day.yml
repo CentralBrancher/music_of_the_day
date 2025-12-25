@@ -69,10 +69,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
           pip install -r requirements.txt
+          
+      # -----------------------------
+      # Verify SoundFont exists (Linux)
+      # -----------------------------
+      - name: Verify SoundFont exists (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          ls -lh assets/soundfonts
+      
+      # -----------------------------
+      # Verify SoundFont exists (Windows)
+      # -----------------------------
+      - name: Verify SoundFont exists (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem assets\soundfonts | Format-Table Name,Length
 
-      # -----------------------------
-      # Optional sanity check
-      # -----------------------------
       - name: Verify SoundFont exists
         run: |
           ls -lh assets/soundfonts || dir assets\soundfonts
